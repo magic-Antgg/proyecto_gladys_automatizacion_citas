@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Citas Dentales</title>
+
+<link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="top"></div>
+
+  <div class="content">
+    <h2>Login</h2>
+    <p class="subtitle">Inicia sesión con tus datos</p>
+
+    <!-- ERRORES -->
+    <div id="errorCorreo" class="error">El correo es obligatorio</div>
+    <div id="errorNombre" class="error">El nombre es obligatorio</div>
+    <div id="errorTelefono" class="error">El teléfono es obligatorio</div>
+
+    <!-- FORM -->
+    <div class="input-group">
+      <label>Correo</label>
+      <input type="email" id="correo" placeholder="Tu correo">
+    </div>
+
+    <div class="input-group">
+      <label>Nombre</label>
+      <input type="text" id="nombre" placeholder="Tu nombre">
+    </div>
+
+    <div class="input-group">
+      <label>Teléfono</label>
+      <input type="text" id="telefono" placeholder="Tu teléfono">
+    </div>
+
+    <div class="input-group">
+      <label>ID</label>
+      <input type="text" id="id" placeholder="Tu ID es:">
+    </div>
+
+    <button onclick="login()">Iniciar Sesión</button>
+  </div>
+
+</div>
+
+<script>
+
+function login() {
+
+  let correo = document.getElementById("correo").value;
+  let nombre = document.getElementById("nombre").value;
+  let telefono = document.getElementById("telefono").value;
+  let id = document.getElementById("id").value;
+
+  // Ocultar errores
+  document.getElementById("errorCorreo").style.display = "none";
+  document.getElementById("errorNombre").style.display = "none";
+  document.getElementById("errorTelefono").style.display = "none";
+
+  let valido = true;
+
+  if (correo === "") {
+    document.getElementById("errorCorreo").style.display = "block";
+    valido = false;
+  }
+
+  if (nombre === "") {
+    document.getElementById("errorNombre").style.display = "block";
+    valido = false;
+  }
+
+  if (telefono === "") {
+    document.getElementById("errorTelefono").style.display = "block";
+    valido = false;
+  }
+
+  if (!valido) return;
+
+  // 🔥 GUARDAR DATOS PARA LA SIGUIENTE PANTALLA
+  const usuario = {
+    correo,
+    nombre,
+    telefono,
+    id
+  };
+
+  localStorage.setItem("usuario", JSON.stringify(usuario));
+
+  // 🔥 REDIRECCIONAR A SERVICIOS
+  window.location.href = "servicios.html";
+}
+
+</script>
+
+</body>
+</html>

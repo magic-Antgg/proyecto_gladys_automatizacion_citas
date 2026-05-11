@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servicios - Citas Dentales</title>
+
+<link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="top"></div>
+
+  <div class="content">
+    <h2>Crear nueva cita Dental</h2>
+    <p class="subtitle">Elige tus servicios</p>
+
+    <p id="bienvenida"></p>
+
+    <div class="nav">
+      <div class="active">SERVICIOS</div>
+      <div class="inactive">INFORMACIÓN CITA</div>
+      <div class="inactive">RESUMEN</div>
+    </div>
+
+    <h3>Servicios</h3>
+
+    <div class="grid">
+      <div class="card" onclick="toggle(this, 'Puentes', 700)">
+        Puentes<br><span class="small">$700</span>
+      </div>
+
+      <div class="card" onclick="toggle(this, 'Extraccion', 500)">
+        Extracción<br><span class="small">$500</span>
+      </div>
+
+      <div class="card" onclick="toggle(this, 'Limpieza', 250)">
+        Limpieza<br><span class="small">$250</span>
+      </div>
+
+      <div class="card" onclick="toggle(this, 'Endodoncia', 500)">
+        Endodoncia<br><span class="small">$500</span>
+      </div>
+    </div>
+
+    <button onclick="continuar()">Siguiente</button>
+  </div>
+
+</div>
+
+<script>
+
+// Mostrar nombre del login
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if (usuario) {
+  document.getElementById("bienvenida").innerText = "Bienvenido: " + usuario.nombre;
+}
+
+// Servicios seleccionados
+let seleccionados = [];
+
+function toggle(elemento, nombre, precio) {
+  elemento.classList.toggle("selected");
+
+  const index = seleccionados.findIndex(s => s.nombre === nombre);
+
+  if (index > -1) {
+    seleccionados.splice(index, 1);
+  } else {
+    seleccionados.push({ nombre, precio });
+  }
+}
+
+function continuar() {
+
+  if (seleccionados.length === 0) {
+    alert("Selecciona al menos un servicio");
+    return;
+  }
+
+  localStorage.setItem("servicios", JSON.stringify(seleccionados));
+
+  alert("Servicios guardados");
+
+  // siguiente pantalla
+  // window.location.href = "informacion.html";
+}
+
+
+
+function continuar() {
+
+  if (seleccionados.length === 0) {
+    alert("Selecciona al menos un servicio");
+    return;
+  }
+
+  localStorage.setItem("servicios", JSON.stringify(seleccionados));
+
+  // 🔥 IR A SIGUIENTE PÁGINA
+  window.location.href = "informacion.html";
+}
+
+</script>
+
+</body>
+</html>

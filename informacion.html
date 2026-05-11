@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Información de Cita</title>
+
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="top"></div>
+
+  <div class="content">
+    <h2>Información de la cita</h2>
+
+    <p id="usuario"></p>
+
+    <input type="date" id="fecha">
+    <input type="time" id="hora">
+
+    <button onclick="guardar()">Continuar</button>
+  </div>
+</div>
+
+<script>
+
+// Mostrar usuario
+const user = JSON.parse(localStorage.getItem("usuario"));
+if (user) {
+  document.getElementById("usuario").innerText =
+    "Paciente: " + user.nombre;
+}
+
+function guardar() {
+
+  const fecha = document.getElementById("fecha").value;
+  const hora = document.getElementById("hora").value;
+
+  if (!fecha || !hora) {
+    alert("Completa fecha y hora");
+    return;
+  }
+
+  const cita = { fecha, hora };
+
+  localStorage.setItem("cita", JSON.stringify(cita));
+
+  // siguiente pantalla
+  window.location.href = "resumen.html";
+}
+
+</script>
+
+</body>
+</html>

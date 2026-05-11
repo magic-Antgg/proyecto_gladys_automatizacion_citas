@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen</title>
+
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- 🔥 IMAGEN -->
+  <div class="top"></div>
+
+  <div class="content">
+    <h2>Resumen de cita</h2>
+
+    <p id="datos"></p>
+    <p id="servicios"></p>
+    <p id="cita"></p>
+    <button onclick="window.location.href='informacion.html'">Regresar</button>
+  </div>
+
+</div>
+
+<script>
+
+const user = JSON.parse(localStorage.getItem("usuario"));
+const servicios = JSON.parse(localStorage.getItem("servicios"));
+const cita = JSON.parse(localStorage.getItem("cita"));
+
+document.getElementById("datos").innerText =
+  "Paciente: " + user.nombre;
+
+document.getElementById("servicios").innerText =
+  "Servicios: " + servicios.map(s => s.nombre).join(", ");
+
+document.getElementById("cita").innerText =
+  "Fecha: " + cita.fecha + " Hora: " + cita.hora;
+
+</script>
+
+</body>
+</html>
