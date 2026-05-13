@@ -1,0 +1,43 @@
+DROP VIEW IF EXISTS agenda_detallada CASCADE;
+DROP TABLE IF EXISTS citas CASCADE;
+DROP TABLE IF EXISTS servicios CASCADE;
+
+CREATE TABLE servicios (
+    id SERIAL PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    duracion_minutos INTEGER NOT NULL
+);
+
+
+INSERT INTO servicios (nombre, duracion_minutos) VALUES 
+('Limpieza Dental', 45),
+('Revisión Bucal', 20),
+('Resinas', 40),
+('Extracción', 60),
+('Colocación de Puentes', 90),
+('Elaboración de Placas', 120);
+
+
+CREATE TABLE citas (
+    id SERIAL PRIMARY KEY,
+    nombre_paciente TEXT NOT NULL,
+    telefono VARCHAR(15) NOT NULL,
+    correo TEXT,
+    id_servicio INTEGER REFERENCES servicios(id),
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    estado TEXT DEFAULT 'pendiente',
+    observaciones TEXT,
+    creado_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE VIEW agenda_detallada AS
+SELECT 
+    c.id,
+    c.fecha,
+    c.hora,
+    c.nombre_paciente,
+    s.nombre as tratamiento,
+    c.estado
+FROM citas c
+JOIN servicios s ON c.id_servicio = s.id;
