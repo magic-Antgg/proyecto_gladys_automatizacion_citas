@@ -5,10 +5,18 @@ const morgan = require('morgan');
 const pacientesRoutes = require('./routes/pacientes.routes');
 const citasRoutes = require('./routes/citas.routes');
 
+
+
 const supabase = require('./config/supabase');
 
 const app = express();
+const authRoutes =
+  require('./routes/auth.routes');
+app.use(cors());
 
+app.use(helmet());
+
+app.use(express.json());
 
 
 const serviciosRoutes = require(
@@ -27,6 +35,10 @@ app.use(morgan('dev'));
 
 app.use(express.json());
 app.use('/api/pacientes', pacientesRoutes);
+app.use(
+  '/api/auth',
+  authRoutes
+);
 app.use('/api/citas', citasRoutes);
 app.use(
   '/api/servicios',
