@@ -1,27 +1,30 @@
 const express = require('express');
+
 const cors = require('cors');
+
 const helmet = require('helmet');
+
 const morgan = require('morgan');
-const pacientesRoutes = require('./routes/pacientes.routes');
-const citasRoutes = require('./routes/citas.routes');
 
+const pacientesRoutes =
+  require('./routes/pacientes.routes');
 
+const citasRoutes =
+  require('./routes/citas.routes');
 
-const supabase = require('./config/supabase');
+const serviciosRoutes =
+  require('./routes/servicios.routes');
 
-const app = express();
+const dashboardRoutes =
+  require('./routes/dashboard.routes');
+
 const authRoutes =
   require('./routes/auth.routes');
-app.use(cors());
 
-app.use(helmet());
+const supabase =
+  require('./config/supabase');
 
-app.use(express.json());
-
-
-const serviciosRoutes = require(
-  './routes/servicios.routes'
-);
+const app = express();
 
 /*
 |--------------------------------------------------------------------------
@@ -30,19 +33,42 @@ const serviciosRoutes = require(
 */
 
 app.use(cors());
+
 app.use(helmet());
+
 app.use(morgan('dev'));
 
 app.use(express.json());
-app.use('/api/pacientes', pacientesRoutes);
+
+/*
+|--------------------------------------------------------------------------
+| Rutas API
+|--------------------------------------------------------------------------
+*/
+
 app.use(
   '/api/auth',
   authRoutes
 );
-app.use('/api/citas', citasRoutes);
+
+app.use(
+  '/api/pacientes',
+  pacientesRoutes
+);
+
+app.use(
+  '/api/citas',
+  citasRoutes
+);
+
 app.use(
   '/api/servicios',
   serviciosRoutes
+);
+
+app.use(
+  '/api/dashboard',
+  dashboardRoutes
 );
 
 /*
@@ -54,12 +80,15 @@ app.use(
 app.get('/', (req, res) => {
 
   res.status(200).json({
+
     ok: true,
-    message: 'DentalSystem API funcionando'
+
+    message:
+      'DentalSystem API funcionando'
+
   });
 
 });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -67,33 +96,46 @@ app.get('/', (req, res) => {
 |--------------------------------------------------------------------------
 */
 
-app.get('/test-db', async (req, res) => {
+app.get(
+  '/test-db',
+  async (req, res) => {
 
-  try {
+    try {
 
-    const { data, error } = await supabase
-      .from('servicios')
-      .select('*');
+      const {
+        data,
+        error
+      } = await supabase
 
-    if (error) {
-      throw error;
+        .from('servicios')
+
+        .select('*');
+
+      if (error) {
+        throw error;
+      }
+
+      res.status(200).json({
+
+        ok: true,
+
+        data
+
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+
+        ok: false,
+
+        message:
+          error.message
+
+      });
+
     }
 
-    res.status(200).json({
-      ok: true,
-      data
-    });
-
-  } catch (error) {
-
-    res.status(500).json({
-      ok: false,
-      message: error.message
-    });
-
-  }
-
 });
-
 
 module.exports = app;
