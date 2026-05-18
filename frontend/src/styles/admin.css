@@ -1,143 +1,303 @@
-/* CONTENEDOR PRINCIPAL */
+/* =======================================================
+   VARIABLES
+======================================================= */
+
+:root {
+  --bg-main:    #102A43;
+  --bg-card:    #173F5F;
+  --bg-sidebar: #0B1F33;
+  --primary:    #2AA7C9;
+  --primary-hover: #1D8AA6;
+  --text:       #ffffff;
+  --text-soft:  #c7d5e0;
+  --danger:     #e74c3c;
+  --shadow:     0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* =======================================================
+   CONTENEDOR
+======================================================= */
+
 .admin-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f0f4f8;
+  background: var(--bg-main);
+  color: var(--text);
 }
 
-/* SIDEBAR */
+/* =======================================================
+   SIDEBAR
+======================================================= */
+
 .sidebar {
-  width: 220px;
-  background-color: #1a1a2e;
+  width: 240px;
+  background: var(--bg-sidebar);
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  box-shadow: var(--shadow);
 }
 
 .sidebar-title {
-  color: #ffffff;
-  font-size: 1.2rem;
-  margin-bottom: 30px;
-  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: var(--text);
 }
 
-/* BOTONES NAVBAR */
+/* =======================================================
+   BOTONES MENÚ
+======================================================= */
+
 .nav-btn {
   width: 100%;
-  padding: 12px 16px;
-  background-color: transparent;
-  color: #a0aec0;
+  padding: 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-soft);
   text-align: left;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: 0.3s;
+  margin-top: 0;
 }
 
 .nav-btn:hover {
-  background-color: #2d2d44;
-  color: #ffffff;
+  background: rgba(255,255,255,0.08);
+  color: white;
 }
 
 .nav-btn.active {
-  background-color: #4f8ef7;
-  color: #ffffff;
+  background: var(--primary);
+  color: white;
   font-weight: bold;
 }
 
-/* CONTENIDO PRINCIPAL */
+/* =======================================================
+   CONTENIDO
+======================================================= */
+
 .admin-content {
   flex: 1;
-  padding: 40px;
+  padding: 30px 40px;
 }
+
+/* =======================================================
+   TÍTULOS
+======================================================= */
 
 .section-title {
-  font-size: 1.5rem;
-  color: #2d3748;
-  margin-bottom: 24px;
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: var(--text);
 }
 
-/* CARDS DASHBOARD */
-.cards {
+/* =======================================================
+   DASHBOARD CARDS
+======================================================= */
+
+.admin-cards {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
 }
 
-.card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 24px 32px;
-  min-width: 180px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  text-align: center;
+.admin-card {
+  background: var(--bg-card);
+  border-radius: 18px;
+  padding: 30px;
+  min-width: 220px;
+  box-shadow: var(--shadow);
+  transition: 0.3s;
 }
 
-.card h3 {
-  font-size: 0.9rem;
-  color: #718096;
-  margin-bottom: 10px;
+.admin-card:hover {
+  transform: translateY(-3px);
 }
 
-.card p {
-  font-size: 2rem;
+.admin-card h3 {
+  color: var(--text-soft);
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.admin-card p {
+  font-size: 2.2rem;
   font-weight: bold;
-  color: #2d3748;
+  color: var(--primary);
 }
 
-/* TABLA */
+/* =======================================================
+   TABLAS
+======================================================= */
+
 .tabla {
   width: 100%;
   border-collapse: collapse;
-  background-color: #ffffff;
-  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 16px;
+  background: var(--bg-card);
+  box-shadow: var(--shadow);
 }
 
 .tabla th {
-  background-color: #4f8ef7;
-  color: #ffffff;
-  padding: 14px 16px;
+  background: var(--primary);
+  color: white;
+  padding: 16px;
   text-align: left;
-  font-size: 0.9rem;
 }
 
 .tabla td {
-  padding: 12px 16px;
-  border-bottom: 1px solid #e2e8f0;
-  color: #4a5568;
-  font-size: 0.9rem;
-}
-
-.tabla tr:last-child td {
-  border-bottom: none;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: var(--text-soft);
 }
 
 .tabla tr:hover td {
-  background-color: #f7fafc;
+  background: rgba(255,255,255,0.04);
 }
 
-/* BOTÓN CANCELAR */
+/* =======================================================
+   BOTÓN CANCELAR
+======================================================= */
+
 .btn-cancelar {
-  background-color: #fc8181;
-  color: #ffffff;
+  background: var(--danger);
+  color: white;
   border: none;
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.85rem;
-  transition: background-color 0.2s;
+  transition: 0.3s;
+  margin-top: 0;
+  width: auto;
 }
 
 .btn-cancelar:hover {
-  background-color: #e53e3e;
+  opacity: 0.8;
 }
 
-/* RESPONSIVE */
+/* =======================================================
+   AGENDA
+======================================================= */
+
+.agenda-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.agenda-item {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+
+.agenda-hora {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--primary);
+  min-width: 80px;
+}
+
+.agenda-info strong { color: var(--text); }
+.agenda-info span   { color: var(--text-soft); }
+
+/* =======================================================
+   LOGIN
+======================================================= */
+
+.admin-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #102A43, #173F5F);
+}
+
+.login-box {
+  background: white;
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-box h2 {
+  color: #102A43;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.login-box p {
+  color: #4b6584;
+  text-align: center;
+}
+
+/* Input con texto negro */
+.login-input {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #d8f0ea;
+  font-size: 1rem;
+  outline: none;
+  color: #000000;
+}
+
+.login-input:focus {
+  border: 2px solid var(--primary);
+}
+
+/* =======================================================
+   BOTÓN LOGIN
+======================================================= */
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 0;
+}
+
+.login-btn:hover {
+  background: var(--primary-hover);
+}
+
+/* =======================================================
+   ERROR LOGIN
+======================================================= */
+
+.login-error {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* =======================================================
+   RESPONSIVE
+======================================================= */
+
 @media (max-width: 768px) {
+
   .admin-container {
     flex-direction: column;
   }
@@ -146,131 +306,13 @@
     width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 16px;
   }
 
   .admin-content {
     padding: 20px;
   }
 
-  .cards {
+  .admin-cards {
     flex-direction: column;
   }
-}
-
-/* AGENDA VISUAL */
-.agenda-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.agenda-item {
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.agenda-hora {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #2d3748;
-  min-width: 80px;
-}
-
-.agenda-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.agenda-info strong {
-  font-size: 1rem;
-  color: #2d3748;
-}
-
-.agenda-info span {
-  font-size: 0.85rem;
-  color: #718096;
-}
-
-.agenda-estado {
-  font-weight: bold;
-  text-transform: capitalize;
-}
-
-/* LOGIN ADMIN */
-.admin-login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #1a1a2e;
-}
-
-.login-box {
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 40px;
-  width: 100%;
-  max-width: 380px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  text-align: center;
-}
-
-.login-box h2 {
-  font-size: 1.6rem;
-  color: #1a1a2e;
-  margin-bottom: 4px;
-}
-
-.login-box p {
-  color: #718096;
-  font-size: 0.95rem;
-  margin-bottom: 8px;
-}
-
-.login-input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  color: #2d3748;
-  outline: none;
-  box-sizing: border-box;
-  transition: border 0.2s;
-}
-
-.login-input:focus {
-  border-color: #4f8ef7;
-}
-
-.login-error {
-  color: #e53e3e;
-  font-size: 0.85rem;
-  margin: 0;
-}
-
-.login-btn {
-  background-color: #4f8ef7;
-  color: #ffffff;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 8px;
-}
-
-.login-btn:hover {
-  background-color: #3a7bd5;
 }

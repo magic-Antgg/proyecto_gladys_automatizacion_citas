@@ -2,8 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 
-
-
 const {
 
   verificarToken,
@@ -11,19 +9,26 @@ const {
   verificarAdmin
 
 } = require(
-
   '../middlewares/auth.middleware'
-
 );
 
 const {
+
   obtenerPacientes,
+
   obtenerPacientePorId,
+
   buscarPacientePorCorreo,
+
   crearPaciente,
+
   actualizarPaciente,
+
   eliminarPaciente
-} = require('../controllers/pacientes.controller');
+
+} = require(
+  '../controllers/pacientes.controller'
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -32,11 +37,10 @@ const {
 */
 
 router.get(
-  '/',
-  verificarToken,
-  verificarAdmin,
-  obtenerPacientes
+  '/buscar',
+  buscarPacientePorCorreo
 );
+
 /*
 |--------------------------------------------------------------------------
 | Obtener todos
@@ -45,6 +49,8 @@ router.get(
 
 router.get(
   '/',
+  verificarToken,
+  verificarAdmin,
   obtenerPacientes
 );
 
