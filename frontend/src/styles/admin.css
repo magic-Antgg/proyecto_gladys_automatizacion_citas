@@ -1,103 +1,68 @@
-/* =======================================================
-   VARIABLES
-======================================================= */
-
-:root {
-  --bg-main:    #102A43;
-  --bg-card:    #173F5F;
-  --bg-sidebar: #0B1F33;
-  --primary:    #2AA7C9;
-  --primary-hover: #1D8AA6;
-  --text:       #ffffff;
-  --text-soft:  #c7d5e0;
-  --danger:     #e74c3c;
-  --shadow:     0 4px 12px rgba(0,0,0,0.25);
-}
-
-/* =======================================================
-   CONTENEDOR
-======================================================= */
-
+/* CONTENEDOR PRINCIPAL */
 .admin-container {
   display: flex;
   min-height: 100vh;
-  background: var(--bg-main);
-  color: var(--text);
+  background: #102A43;
+  color: white;
 }
 
-/* =======================================================
-   SIDEBAR
-======================================================= */
-
+/* SIDEBAR */
 .sidebar {
   width: 240px;
-  background: var(--bg-sidebar);
+  background: #0B1F33;
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 .sidebar-title {
+  color: #ffffff;
   font-size: 1.4rem;
   font-weight: bold;
   margin-bottom: 20px;
-  color: var(--text);
+  text-align: center;
 }
 
-/* =======================================================
-   BOTONES MENÚ
-======================================================= */
-
+/* BOTONES NAVBAR */
 .nav-btn {
   width: 100%;
   padding: 14px;
+  background: transparent;
+  color: #c7d5e0;
   border: none;
   border-radius: 10px;
-  background: transparent;
-  color: var(--text-soft);
   text-align: left;
   font-size: 0.95rem;
   cursor: pointer;
   transition: 0.3s;
-  margin-top: 0;
 }
 
 .nav-btn:hover {
   background: rgba(255,255,255,0.08);
-  color: white;
+  color: #ffffff;
 }
 
 .nav-btn.active {
-  background: var(--primary);
-  color: white;
+  background: #2AA7C9;
+  color: #ffffff;
   font-weight: bold;
 }
 
-/* =======================================================
-   CONTENIDO
-======================================================= */
-
+/* CONTENIDO PRINCIPAL */
 .admin-content {
   flex: 1;
   padding: 30px 40px;
 }
 
-/* =======================================================
-   TÍTULOS
-======================================================= */
-
 .section-title {
   font-size: 2rem;
+  color: #ffffff;
   margin-bottom: 25px;
-  color: var(--text);
 }
 
-/* =======================================================
-   DASHBOARD CARDS
-======================================================= */
-
+/* CARDS DASHBOARD */
 .admin-cards {
   display: flex;
   gap: 20px;
@@ -105,11 +70,11 @@
 }
 
 .admin-card {
-  background: var(--bg-card);
+  background: #173F5F;
   border-radius: 18px;
   padding: 30px;
   min-width: 220px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   transition: 0.3s;
 }
 
@@ -118,7 +83,7 @@
 }
 
 .admin-card h3 {
-  color: var(--text-soft);
+  color: #c7d5e0;
   margin-bottom: 12px;
   font-size: 1rem;
 }
@@ -126,25 +91,22 @@
 .admin-card p {
   font-size: 2.2rem;
   font-weight: bold;
-  color: var(--primary);
+  color: #2AA7C9;
 }
 
-/* =======================================================
-   TABLAS
-======================================================= */
-
+/* TABLA */
 .tabla {
   width: 100%;
   border-collapse: collapse;
   overflow: hidden;
   border-radius: 16px;
-  background: var(--bg-card);
-  box-shadow: var(--shadow);
+  background: #173F5F;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 .tabla th {
-  background: var(--primary);
-  color: white;
+  background: #2AA7C9;
+  color: #ffffff;
   padding: 16px;
   text-align: left;
 }
@@ -152,37 +114,43 @@
 .tabla td {
   padding: 14px 16px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
-  color: var(--text-soft);
+  color: #c7d5e0;
 }
 
 .tabla tr:hover td {
   background: rgba(255,255,255,0.04);
 }
 
-/* =======================================================
-   BOTÓN CANCELAR
-======================================================= */
-
-.btn-cancelar {
-  background: var(--danger);
-  color: white;
+/* BOTONES */
+.btn-cancelar,
+.btn-editar {
   border: none;
   padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 5px;
   transition: 0.3s;
-  margin-top: 0;
-  width: auto;
+  color: white;
+}
+
+.btn-cancelar {
+  background: #e74c3c;
 }
 
 .btn-cancelar:hover {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
-/* =======================================================
-   AGENDA
-======================================================= */
+.btn-editar {
+  background: #2AA7C9;
+}
 
+.btn-editar:hover {
+  background: #1D8AA6;
+}
+
+/* AGENDA */
 .agenda-lista {
   display: flex;
   flex-direction: column;
@@ -190,29 +158,46 @@
 }
 
 .agenda-item {
-  background: var(--bg-card);
+  background: #173F5F;
   border-radius: 14px;
   padding: 20px;
   display: flex;
   gap: 20px;
   align-items: center;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 .agenda-hora {
   font-size: 1.3rem;
   font-weight: bold;
-  color: var(--primary);
+  color: #2AA7C9;
   min-width: 80px;
 }
 
-.agenda-info strong { color: var(--text); }
-.agenda-info span   { color: var(--text-soft); }
+.agenda-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
-/* =======================================================
-   LOGIN
-======================================================= */
+.agenda-info strong {
+  color: #ffffff;
+}
 
+.agenda-info span {
+  color: #c7d5e0;
+}
+
+.agenda-estado {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.agenda-empty {
+  color: #c7d5e0;
+}
+
+/* LOGIN ADMIN */
 .admin-login {
   display: flex;
   justify-content: center;
@@ -222,82 +207,75 @@
 }
 
 .login-box {
-  background: white;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px;
   width: 100%;
   max-width: 400px;
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
 }
 
 .login-box h2 {
-  color: #102A43;
   font-size: 2rem;
-  text-align: center;
+  color: #102A43;
+  margin-bottom: 4px;
 }
 
 .login-box p {
   color: #4b6584;
-  text-align: center;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
 }
 
-/* Input con texto negro */
 .login-input {
   width: 100%;
   padding: 14px;
-  border: none;
+  border: 1px solid #7fd4cf;
   border-radius: 10px;
-  background: #d8f0ea;
   font-size: 1rem;
-  outline: none;
   color: #000000;
+  background: #d8f0ea;
+  outline: none;
+}
+
+.login-input::placeholder {
+  color: #5f6b75;
 }
 
 .login-input:focus {
-  border: 2px solid var(--primary);
+  border-color: #2AA7C9;
+  box-shadow: 0 0 10px rgba(42,167,201,0.35);
 }
-
-/* =======================================================
-   BOTÓN LOGIN
-======================================================= */
 
 .login-btn {
   width: 100%;
   padding: 14px;
   border: none;
   border-radius: 10px;
-  background: var(--primary);
+  background: #2AA7C9;
   color: white;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
-  margin-top: 0;
 }
 
 .login-btn:hover {
-  background: var(--primary-hover);
+  background: #1D8AA6;
 }
-
-/* =======================================================
-   ERROR LOGIN
-======================================================= */
 
 .login-error {
-  color: red;
+  color: #e74c3c;
   font-size: 0.9rem;
-  text-align: center;
+  margin: 0;
 }
 
-/* =======================================================
-   RESPONSIVE
-======================================================= */
-
+/* RESPONSIVE */
 @media (max-width: 768px) {
-
   .admin-container {
     flex-direction: column;
   }
@@ -315,4 +293,55 @@
   .admin-cards {
     flex-direction: column;
   }
+}
+
+.btn-editar {
+
+  background: #2AA7C9;
+
+  color: white;
+
+  border: none;
+
+  padding: 8px 14px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  margin-right: 8px;
+
+  transition: 0.3s;
+}
+
+.btn-editar:hover {
+
+  background: #1D8AA6;
+}
+/* =======================================================
+   BOTON EDITAR
+======================================================= */
+
+.btn-editar {
+
+  background: #2AA7C9;
+
+  color: white;
+
+  border: none;
+
+  padding: 8px 14px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  margin-right: 8px;
+
+  transition: 0.3s;
+}
+
+.btn-editar:hover {
+
+  background: #1D8AA6;
 }

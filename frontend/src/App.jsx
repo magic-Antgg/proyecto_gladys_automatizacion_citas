@@ -1,8 +1,5 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import Login from './pages/Login';
 import Servicios from './pages/Servicios';
 import Informacion from './pages/Informacion';

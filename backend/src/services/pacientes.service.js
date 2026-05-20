@@ -2,20 +2,25 @@ const supabase = require('../config/supabase');
 
 /*
 |--------------------------------------------------------------------------
-| Obtener todos los pacientes
+| Obtener pacientes
 |--------------------------------------------------------------------------
 */
 
 const obtenerPacientes = async () => {
 
-  const { data, error } = await supabase
+  const {
+    data,
+    error
+  } = await supabase
     .from('pacientes')
     .select('*')
-    .order('id', { ascending: true });
+    .order('created_at', { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
-  return data;
+  return data || [];
 };
 
 /*
@@ -26,15 +31,48 @@ const obtenerPacientes = async () => {
 
 const obtenerPacientePorId = async (id) => {
 
-  const { data, error } = await supabase
+  const {
+    data,
+    error
+  } = await supabase
     .from('pacientes')
     .select('*')
     .eq('id', id)
-    .single();
+    .limit(1);
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
-  return data;
+  return data?.[0] || null;
+};
+
+/*
+|--------------------------------------------------------------------------
+| Buscar paciente por correo
+|--------------------------------------------------------------------------
+*/
+
+const buscarPacientePorCorreo = async (correo) => {
+
+  if (!correo) {
+    return null;
+  }
+
+  const {
+    data,
+    error
+  } = await supabase
+    .from('pacientes')
+    .select('*')
+    .eq('correo', correo)
+    .limit(1);
+
+  if (error) {
+    throw error;
+  }
+
+  return data?.[0] || null;
 };
 
 /*
@@ -43,15 +81,20 @@ const obtenerPacientePorId = async (id) => {
 |--------------------------------------------------------------------------
 */
 
-const crearPaciente = async (paciente) => {
+const crearPaciente = async (datos) => {
 
-  const { data, error } = await supabase
+  const {
+    data,
+    error
+  } = await supabase
     .from('pacientes')
-    .insert([paciente])
-    .select()
+    .insert([datos])
+    .select('*')
     .single();
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
   return data;
 };
@@ -62,16 +105,21 @@ const crearPaciente = async (paciente) => {
 |--------------------------------------------------------------------------
 */
 
-const actualizarPaciente = async (id, paciente) => {
+const actualizarPaciente = async (id, datos) => {
 
-  const { data, error } = await supabase
+  const {
+    data,
+    error
+  } = await supabase
     .from('pacientes')
-    .update(paciente)
+    .update(datos)
     .eq('id', id)
-    .select()
+    .select('*')
     .single();
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
   return data;
 };
@@ -84,39 +132,18 @@ const actualizarPaciente = async (id, paciente) => {
 
 const eliminarPaciente = async (id) => {
 
-  const { error } = await supabase
+  const {
+    error
+  } = await supabase
     .from('pacientes')
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
-
-  return true;
-};
-
-/*
-|--------------------------------------------------------------------------
-| Buscar paciente por correo
-| - Usa .ilike() para búsqueda sin importar mayúsculas
-| - PGRST116 = "no rows found" → no es un error real, devuelve null
-|--------------------------------------------------------------------------
-*/
-
-const buscarPacientePorCorreo = async (correo) => {
-
-  const { data, error } = await supabase
-    .from('pacientes')
-    .select('*')
-    .ilike('correo', correo)
-    .single();
-
-  // PGRST116 = paciente no existe → flujo normal, no lanzar error
-  if (error && error.code !== 'PGRST116') {
+  if (error) {
     throw error;
   }
 
-  return data || null;
-
+  return true;
 };
 
 module.exports = {

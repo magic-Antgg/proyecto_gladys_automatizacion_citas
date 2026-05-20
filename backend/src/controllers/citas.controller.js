@@ -148,9 +148,54 @@ const reprogramarCita = async (req, res) => {
   }
 
 };
+
+const actualizarCita = async (req, res) => {
+
+  try {
+
+    const { id } = req.params;
+
+    const {
+      fecha,
+      hora,
+      estado
+    } = req.body;
+
+    const { data, error } = await supabase
+      .from('citas')
+      .update({
+        fecha,
+        hora,
+        estado
+      })
+      .eq('id', id)
+      .select();
+
+    if (error) {
+
+      return res.status(500).json({
+        ok: false,
+        message: error.message
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      data
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      ok: false,
+      message: error.message
+    });
+  }
+};
 module.exports = {
   crearCita,
   obtenerAgenda,
   cancelarCita,
+  actualizarCita,
   reprogramarCita
 };

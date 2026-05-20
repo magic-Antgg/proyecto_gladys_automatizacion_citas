@@ -19,12 +19,6 @@ function Admin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  /*
-  |--------------------------------------------------
-  | LOGIN
-  |--------------------------------------------------
-  */
-
   const handleLogin = () => {
 
     if (
@@ -38,22 +32,11 @@ function Admin() {
     }
   };
 
-  /*
-  |--------------------------------------------------
-  | PANTALLA LOGIN
-  |--------------------------------------------------
-  */
-
   if (!autenticado) {
-
     return (
-
       <div className="admin-login">
-
         <div className="login-box">
-
           <h2>🦷 DentalSystem</h2>
-
           <p>Panel Administrador</p>
 
           <input
@@ -73,41 +56,25 @@ function Admin() {
             onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
           />
 
-          {error && (
-            <p className="login-error">{error}</p>
-          )}
+          {error && <p className="login-error">{error}</p>}
 
           <button className="login-btn" onClick={handleLogin}>
             Entrar
           </button>
-
         </div>
-
       </div>
     );
   }
 
-  /*
-  |--------------------------------------------------
-  | PANEL ADMIN
-  |--------------------------------------------------
-  */
-
   return (
-
     <div className="admin-container">
-
       <AdminNavbar vista={vista} setVista={setVista} />
-
       <div className="admin-content">
-
         {vista === 'dashboard' && <DashboardCards />}
-        {vista === 'citas'     && <TablaCitas />}
+        {vista === 'citas' && <TablaCitas />}
         {vista === 'pacientes' && <TablaPacientes />}
-        {vista === 'agenda'    && <AgendaVisual />}
-
+        {vista === 'agenda' && <AgendaVisual />}
       </div>
-
     </div>
   );
 }

@@ -10,13 +10,10 @@ export const crearPaciente =
   async (datos) => {
 
     const response =
-      await api.post(
-        '/pacientes',
-        datos
-      );
+      await api.post('/pacientes', datos);
 
     return response.data;
-};
+  };
 
 /*
 |--------------------------------------------------------------------------
@@ -29,8 +26,8 @@ export const buscarPacientePorCorreo =
 
     const response =
       await api.get(
-        `/pacientes/buscar?correo=${correo}`
+        `/pacientes/buscar?correo=${encodeURIComponent(correo)}`
       );
 
     return response.data.data;
-};
+  };

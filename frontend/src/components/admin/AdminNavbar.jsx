@@ -1,7 +1,6 @@
 function AdminNavbar({ vista, setVista }) {
   return (
     <div className="sidebar">
-
       <h2 className="sidebar-title">🦷 DentalSystem</h2>
 
       <nav>
@@ -33,7 +32,6 @@ function AdminNavbar({ vista, setVista }) {
           🗓️ Agenda
         </button>
       </nav>
-
     </div>
   );
 }
