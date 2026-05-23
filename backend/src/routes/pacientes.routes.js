@@ -1,56 +1,20 @@
 const express = require('express');
-
 const router = express.Router();
 
 const {
   obtenerPacientes,
+  buscarPacientePorCorreo,
   crearPaciente,
   actualizarPaciente,
   eliminarPaciente
 } = require('../controllers/pacientes.controller');
 
-/*
-|--------------------------------------------------
-| Obtener pacientes
-|--------------------------------------------------
-*/
+// IMPORTANTE: /buscar debe ir ANTES de /:id
+router.get('/buscar', buscarPacientePorCorreo);
 
-router.get(
-  '/',
-  obtenerPacientes
-);
-
-/*
-|--------------------------------------------------
-| Crear paciente
-|--------------------------------------------------
-*/
-
-router.post(
-  '/',
-  crearPaciente
-);
-
-/*
-|--------------------------------------------------
-| Actualizar paciente
-|--------------------------------------------------
-*/
-
-router.put(
-  '/:id',
-  actualizarPaciente
-);
-
-/*
-|--------------------------------------------------
-| Eliminar paciente
-|--------------------------------------------------
-*/
-
-router.delete(
-  '/:id',
-  eliminarPaciente
-);
+router.get('/',       obtenerPacientes);
+router.post('/',      crearPaciente);
+router.put('/:id',    actualizarPaciente);
+router.delete('/:id', eliminarPaciente);
 
 module.exports = router;

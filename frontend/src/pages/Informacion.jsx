@@ -1,197 +1,122 @@
-import {
-  useNavigate
-} from 'react-router-dom';
-
-import {
-  useState
-} from 'react';
-
-import {
-  crearPaciente,
-  buscarPacientePorCorreo
-} from '../services/pacientes.service';
-
-import {
-  crearCita
-} from '../services/citas.service';
-
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { crearPaciente, buscarPacientePorCorreo } from '../services/pacientes.service';
+import { crearCita } from '../services/citas.service';
 import '../styles/styles.css';
 
 const Informacion = () => {
 
   const navigate = useNavigate();
 
-  const usuario = JSON.parse(
-    localStorage.getItem('usuario')
-  );
+  const usuario  = JSON.parse(localStorage.getItem('usuario')) || {};
+  const servicios = JSON.parse(localStorage.getItem('servicios')) || [];
 
-  const servicios = JSON.parse(
-    localStorage.getItem('servicios')
-  ) || [];
+  const [fecha, setFecha]       = useState('');
+  const [hora, setHora]         = useState('');
+  const [guardando, setGuardando] = useState(false);
 
-  const [fecha, setFecha] =
-    useState('');
-
-  const [hora, setHora] =
-    useState('');
+  const hoy = new Date().toISOString().split('T')[0];
 
   const guardar = async () => {
 
+    if (!fecha || !hora) { alert('Completa fecha y hora'); return; }
+    if (!usuario?.correo) { alert('Sesión no válida'); navigate('/'); return; }
+    if (servicios.length === 0) { alert('Selecciona al menos un servicio'); navigate('/servicios'); return; }
+
+    setGuardando(true);
+
     try {
 
-      if (!fecha || !hora) {
-
-        alert('Completa fecha y hora');
-        return;
-      }
-
-      if (!usuario?.correo) {
-
-        alert('No hay usuario cargado');
-        return;
-      }
-
-      if (servicios.length === 0) {
-
-        alert('Selecciona al menos un servicio');
-        return;
-      }
-
-      /*
-      |--------------------------------------------------------------------------
-      | Buscar paciente existente
-      |--------------------------------------------------------------------------
-      */
-
+      // 1. Buscar si el paciente ya existe
       let pacienteId = null;
 
-      const pacienteExistente =
-        await buscarPacientePorCorreo(usuario.correo);
-
-      if (pacienteExistente?.id) {
-
-        pacienteId = pacienteExistente.id;
-
-      } else {
-
-        const nuevoPaciente = {
-
-          nombre: usuario.nombre,
-
-          telefono: usuario.telefono,
-
-          correo: usuario.correo,
-
-          fecha_nacimiento: '2000-01-01'
-
-        };
-
-        const pacienteCreado =
-          await crearPaciente(nuevoPaciente);
-
-        pacienteId = pacienteCreado.data.id;
+      try {
+        const pacienteExistente = await buscarPacientePorCorreo(usuario.correo);
+        pacienteId = pacienteExistente?.id ?? null;
+      } catch (err) {
+        // 404 = paciente nuevo, cualquier otro error lo propagamos
+        if (err.response?.status !== 404) throw err;
       }
 
-      /*
-      |--------------------------------------------------------------------------
-      | IDs de servicios
-      |--------------------------------------------------------------------------
-      */
+      // 2. Crear paciente solo si no existe
+      if (!pacienteId) {
+        const respuesta = await crearPaciente({
+          nombre: usuario.nombre,
+          telefono: usuario.telefono,
+          correo: usuario.correo,
+          fecha_nacimiento: '2000-01-01'
+        });
+        pacienteId = respuesta.data.id;
+      }
 
-      const serviciosIds =
-        servicios.map((s) => s.id);
-
-      /*
-      |--------------------------------------------------------------------------
-      | Crear cita
-      |--------------------------------------------------------------------------
-      */
-
+      // 3. Crear cita
       await crearCita({
-
         paciente_id: Number(pacienteId),
-
         fecha,
-
         hora_inicio: hora,
-
-        servicios: serviciosIds,
-
-        observaciones:
-          'Cita creada desde frontend'
-
+        servicios: servicios.map((s) => s.id),
+        observaciones: 'Cita creada desde la app'
       });
 
-      localStorage.setItem(
-        'cita',
-        JSON.stringify({
-          nombre: usuario.nombre,
-          correo: usuario.correo,
-          fecha,
-          hora,
-          servicios
-        })
-      );
-
-      alert('Cita creada correctamente');
+      // 4. Guardar resumen y navegar
+      localStorage.setItem('cita', JSON.stringify({
+        nombre: usuario.nombre,
+        correo: usuario.correo,
+        fecha,
+        hora,
+        servicios
+      }));
 
       navigate('/resumen');
 
     } catch (error) {
-
-      console.log(error);
-
-      alert(
-        error.response?.data?.message ||
-        'Error al crear cita'
-      );
-
+      console.error(error);
+      alert(error.response?.data?.message || 'Error al crear la cita');
+    } finally {
+      setGuardando(false);
     }
-
   };
 
   return (
-
     <div className="container">
-
       <div className="top"></div>
-
       <div className="content">
 
-        <h2>
-          Información de cita
-        </h2>
+        <div className="nav">
+          <div className="inactive">SERVICIOS</div>
+          <div className="active">INFORMACIÓN</div>
+          <div className="inactive">RESUMEN</div>
+        </div>
 
-        <p>
-          Paciente: {usuario?.nombre}
-        </p>
+        <h2>Información de cita</h2>
+        <p>Paciente: <strong>{usuario?.nombre}</strong></p>
+
+        {servicios.length > 0 && (
+          <p className="subtitle">
+            Servicios: {servicios.map((s) => s.nombre).join(', ')}
+          </p>
+        )}
 
         <input
           type="date"
           value={fecha}
-          onChange={(e) =>
-            setFecha(e.target.value)
-          }
+          min={hoy}
+          onChange={(e) => setFecha(e.target.value)}
         />
 
         <input
           type="time"
           value={hora}
-          onChange={(e) =>
-            setHora(e.target.value)
-          }
+          onChange={(e) => setHora(e.target.value)}
         />
 
-        <button onClick={guardar}>
-          Confirmar cita
+        <button onClick={guardar} disabled={guardando}>
+          {guardando ? 'Guardando...' : 'Confirmar cita'}
         </button>
 
       </div>
-
     </div>
-
   );
-
 };
 
 export default Informacion;

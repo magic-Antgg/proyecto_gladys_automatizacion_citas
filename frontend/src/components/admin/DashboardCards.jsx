@@ -1,51 +1,55 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 
 function DashboardCards() {
 
-  const [stats, setStats] = useState({
-    totalCitas: 0,
-    totalPacientes: 0,
-    canceladas: 0
-  });
+  const [stats, setStats]       = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError]       = useState(null);
 
-  useEffect(() => {
+  useEffect(() => { cargarEstadisticas(); }, []);
 
-    axios.get('http://localhost:3000/api/dashboard')
-      .then((res) => setStats(res.data.data || stats))
-      .catch((err) =>
-        console.error('Error cargando estadísticas:', err)
-      );
+  const cargarEstadisticas = async () => {
+    try {
+      setCargando(true);
+      setError(null);
+      const res = await api.get('/dashboard');
+      setStats(res.data.data);
+    } catch (err) {
+      console.error(err);
+      setError('No se pudieron cargar las estadísticas.');
+    } finally {
+      setCargando(false);
+    }
+  };
 
-  }, []);
+  if (cargando) return <p style={{ color: '#a0aec0', padding: '20px' }}>Cargando estadísticas...</p>;
+
+  if (error) return (
+    <div>
+      <p style={{ color: '#fc8181' }}>{error}</p>
+      <button className="login-btn" style={{ width: 'auto', marginTop: '10px' }}
+        onClick={cargarEstadisticas}>Reintentar</button>
+    </div>
+  );
+
+  const tarjetas = [
+    { label: 'Total Citas',           valor: stats?.totalCitas    ?? 0, icono: '📅' },
+    { label: 'Pacientes Registrados', valor: stats?.totalPacientes ?? 0, icono: '👥' },
+    { label: 'Citas Canceladas',      valor: stats?.canceladas    ?? 0, icono: '❌' },
+  ];
 
   return (
-
     <div>
-
-      <h2 className="section-title">
-        📊 Dashboard
-      </h2>
-
+      <h2 className="section-title">📊 Dashboard</h2>
       <div className="admin-cards">
-
-        <div className="admin-card">
-          <h3>Total Citas</h3>
-          <p>{stats.totalCitas}</p>
-        </div>
-
-        <div className="admin-card">
-          <h3>Pacientes Registrados</h3>
-          <p>{stats.totalPacientes}</p>
-        </div>
-
-        <div className="admin-card">
-          <h3>Citas Canceladas</h3>
-          <p>{stats.canceladas}</p>
-        </div>
-
+        {tarjetas.map((t) => (
+          <div className="admin-card" key={t.label}>
+            <h3>{t.icono} {t.label}</h3>
+            <p>{t.valor}</p>
+          </div>
+        ))}
       </div>
-
     </div>
   );
 }
