@@ -88,6 +88,9 @@ const Resumen = () => {
 
         <button onClick={nuevaCita}>Agendar otra cita</button>
 
+        <button className="btn-regresar" onClick={() => navigate('/informacion')}>
+          ← Regresar
+        </button>
       </div>
     </div>
   );

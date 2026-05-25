@@ -114,6 +114,9 @@ const Informacion = () => {
           {guardando ? 'Guardando...' : 'Confirmar cita'}
         </button>
 
+        <button className="btn-regresar" onClick={() => navigate('/servicios')}>
+          ← Regresar
+        </button>
       </div>
     </div>
   );

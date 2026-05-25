@@ -7,12 +7,10 @@
    BODY
 ========================= */
 body {
-  background: #102A43;
   font-family: Arial, sans-serif;
   min-height: 100vh;
   width: 100%;
   overflow-x: hidden;
-  padding: 16px;
 }
 
 /* =========================
@@ -20,29 +18,49 @@ body {
 ========================= */
 .container {
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  background: #102A43;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  min-height: 100vh;
+  background: url('../assets/Diente.jpg') center/80% no-repeat fixed;
+  background-color: #102A43;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+}
+
+.container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, #102A43 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
 }
 
 /* =========================
-   IMAGEN SUPERIOR
+   IMAGEN SUPERIOR — oculta
 ========================= */
-.top {
-  background: url('../assets/Diente.jpg') center/cover;
-  width: 100%;
-  height: 200px;
-}
+.top { display: none; }
 
 /* =========================
    CONTENIDO
 ========================= */
-.content { padding: 20px; color: white; }
+.content {
+  background: #ffffff;
+  backdrop-filter: blur(4px);
+  border-radius: 15px;
+  padding: 40px 32px;
+  color: rgb(0, 0, 0);
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  text-align: center;
+}
 
 /* =========================
    TEXTOS
@@ -142,18 +160,35 @@ button:disabled { opacity: 0.6; cursor: not-allowed; }
 .resumen-lista li .small { color: #6ed0cf; font-weight: bold; }
 
 /* =========================
-   RESPONSIVE — TABLET
+   RESPONSIVE — TABLET Y PC
 ========================= */
 @media (min-width: 768px) {
-  .container { flex-direction: row; min-height: 600px; }
-  .top { width: 50%; height: auto; }
-  .content { width: 50%; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+  .content { padding: 50px 48px; }
   .grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* =========================
-   RESPONSIVE — PC
-========================= */
 @media (min-width: 1024px) {
   .grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* =========================
+   BOTÓN REGRESAR
+========================= */
+.btn-regresar {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: 2px solid #2aa7c9;
+  border-radius: 5px;
+  background: transparent;
+  color: #2aa7c9;
+  font-weight: bold;
+  font-size: clamp(14px, 3.5vw, 16px);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-regresar:hover {
+  background: #2aa7c9;
+  color: white;
 }

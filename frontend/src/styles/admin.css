@@ -146,22 +146,37 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #102A43, #173F5F);
-}
-.login-box {
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  background: url('../assets/Diente.jpg') center/80% no-repeat fixed;
+  background-color: #102A43;
+  position: relative;
+  color: black;
   text-align: center;
 }
-.login-box h2 { font-size: 2rem; color: #102A43; margin-bottom: 4px; }
-.login-box p  { color: #4b6584; font-size: 0.95rem; }
+
+.admin-login::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, #102A43 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-box { 
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 60px 56px;
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+
+}
 
 .login-input {
   width: 100%;
@@ -169,7 +184,7 @@
   border: 1px solid #7fd4cf;
   border-radius: 10px;
   font-size: 1rem;
-  color: #000000;
+  color: black;
   background: #d8f0ea;
   outline: none;
 }

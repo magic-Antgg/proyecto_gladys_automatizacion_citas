@@ -188,6 +188,10 @@ const cargarServicios = async () => {
           Siguiente
         </button>
 
+        <button className="btn-regresar" onClick={() => navigate('/')}>
+          ← Regresar
+        </button>
+
       </div>
 
     </div>
