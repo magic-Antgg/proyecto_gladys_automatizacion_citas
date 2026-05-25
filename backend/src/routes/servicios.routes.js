@@ -1,22 +1,10 @@
 const express = require('express');
-
 const router = express.Router();
+const { obtenerServicios, crearServicio, actualizarServicio, eliminarServicio } = require('../controllers/servicios.controller');
 
-const {
-  obtenerServicios
-} = require(
-  '../controllers/servicios.controller'
-);
-
-/*
-|--------------------------------------------------------------------------
-| GET servicios
-|--------------------------------------------------------------------------
-*/
-
-router.get(
-  '/',
-  obtenerServicios
-);
+router.get('/',       obtenerServicios);
+router.post('/',      crearServicio);
+router.put('/:id',    actualizarServicio);
+router.delete('/:id', eliminarServicio);
 
 module.exports = router;

@@ -1,10 +1,5 @@
 const pacientesService = require('../services/pacientes.service');
 
-/*
-|--------------------------------------------------------------------------
-| Obtener todos los pacientes
-|--------------------------------------------------------------------------
-*/
 const obtenerPacientes = async (req, res) => {
   try {
     const pacientes = await pacientesService.obtenerPacientes();
@@ -14,81 +9,30 @@ const obtenerPacientes = async (req, res) => {
   }
 };
 
-/*
-|--------------------------------------------------------------------------
-| Buscar paciente por correo
-| Devuelve 404 si no existe para que el frontend cree uno nuevo
-|--------------------------------------------------------------------------
-*/
 const buscarPacientePorCorreo = async (req, res) => {
   try {
     const { correo } = req.query;
-
-    if (!correo) {
-      return res.status(400).json({
-        ok: false,
-        message: 'El parámetro correo es requerido'
-      });
-    }
-
+    if (!correo) return res.status(400).json({ ok: false, message: 'Correo requerido' });
     const paciente = await pacientesService.buscarPacientePorCorreo(correo);
-
-    if (!paciente) {
-      return res.status(404).json({
-        ok: false,
-        message: 'Paciente no encontrado'
-      });
-    }
-
+    if (!paciente) return res.status(404).json({ ok: false, message: 'Paciente no encontrado' });
     res.status(200).json({ ok: true, data: paciente });
-
   } catch (error) {
     res.status(500).json({ ok: false, message: error.message });
   }
 };
 
-/*
-|--------------------------------------------------------------------------
-| Crear paciente
-| Detecta duplicados y devuelve 409
-|--------------------------------------------------------------------------
-*/
 const crearPaciente = async (req, res) => {
   try {
     const { nombre, telefono, correo, fecha_nacimiento } = req.body;
-
-    const nuevoPaciente = await pacientesService.crearPaciente({
-      nombre,
-      telefono,
-      correo,
-      fecha_nacimiento,
-      activo: true
-    });
-
-    res.status(201).json({ ok: true, data: nuevoPaciente });
-
+    const nuevo = await pacientesService.crearPaciente({ nombre, telefono, correo, fecha_nacimiento, activo: true });
+    res.status(201).json({ ok: true, data: nuevo });
   } catch (error) {
-    const esDuplicado =
-      error.code === '23505' ||
-      error.message?.includes('duplicate key') ||
-      error.message?.includes('unique constraint');
-
-    if (esDuplicado) {
-      return res.status(409).json({
-        ok: false,
-        message: 'Ya existe un paciente con ese teléfono o correo.'
-      });
-    }
-
+    const esDuplicado = error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint');
+    if (esDuplicado) return res.status(409).json({ ok: false, message: 'Ya existe un paciente con ese teléfono o correo.' });
     res.status(500).json({ ok: false, message: error.message });
   }
 };
 
-/*
-|--------------------------------------------------------------------------
-| Actualizar paciente
-|--------------------------------------------------------------------------
-*/
 const actualizarPaciente = async (req, res) => {
   try {
     const { id } = req.params;
@@ -101,23 +45,17 @@ const actualizarPaciente = async (req, res) => {
 
 /*
 |--------------------------------------------------------------------------
-| Eliminar paciente
+| Soft delete — no borra físicamente para respetar FK con citas
 |--------------------------------------------------------------------------
 */
 const eliminarPaciente = async (req, res) => {
   try {
     const { id } = req.params;
-    await pacientesService.eliminarPaciente(id);
-    res.status(200).json({ ok: true, message: 'Paciente eliminado' });
+    await pacientesService.desactivarPaciente(id);
+    res.status(200).json({ ok: true, message: 'Paciente desactivado correctamente' });
   } catch (error) {
     res.status(500).json({ ok: false, message: error.message });
   }
 };
 
-module.exports = {
-  obtenerPacientes,
-  buscarPacientePorCorreo,
-  crearPaciente,
-  actualizarPaciente,
-  eliminarPaciente
-};
+module.exports = { obtenerPacientes, buscarPacientePorCorreo, crearPaciente, actualizarPaciente, eliminarPaciente };
