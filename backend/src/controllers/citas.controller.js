@@ -1,4 +1,5 @@
 const citasService = require('../services/citas.service');
+const supabase = require('../config/supabase');
 const { citaSchema } = require('../validations/citas.validation');
 
 /*
@@ -118,4 +119,83 @@ const reprogramarCita = async (req, res) => {
   }
 };
 
-module.exports = { crearCita, obtenerAgenda, cancelarCita, reprogramarCita };
+const obtenerMisCitas = async (
+  req,
+  res
+) => {
+
+  try {
+
+    const {
+      usuario_id
+    } = req.params;
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from('citas')
+      .select(`
+        *,
+        pacientes(nombre)
+      `)
+      .eq(
+        'usuario_id',
+        usuario_id
+      )
+      .order(
+        'fecha',
+        {
+          ascending: true
+        }
+      );
+
+    if (error) {
+
+      return res.status(400).json({
+
+        ok: false,
+
+        message:
+          error.message
+
+      });
+
+    }
+
+    res.json({
+
+      ok: true,
+
+      data
+
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+
+      ok: false,
+
+      message:
+        error.message
+
+    });
+
+  }
+
+};
+
+module.exports = {
+
+  crearCita,
+
+  obtenerAgenda,
+
+  cancelarCita,
+
+  reprogramarCita,
+
+  obtenerMisCitas
+
+};

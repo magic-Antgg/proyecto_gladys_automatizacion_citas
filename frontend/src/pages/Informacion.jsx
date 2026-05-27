@@ -51,11 +51,26 @@ const Informacion = () => {
 
       // 3. Crear cita
       await crearCita({
-        paciente_id: Number(pacienteId),
+
+        usuario_id:
+          usuario.id,
+
+        paciente_id:
+          Number(pacienteId),
+
         fecha,
-        hora_inicio: hora,
-        servicios: servicios.map((s) => s.id),
-        observaciones: 'Cita creada desde la app'
+
+        hora_inicio:
+          hora,
+
+        servicios:
+          servicios.map(
+            (s) => s.id
+          ),
+
+        observaciones:
+          'Cita creada desde la app'
+
       });
 
       // 4. Guardar resumen y navegar

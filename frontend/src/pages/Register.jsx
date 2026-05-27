@@ -6,21 +6,28 @@ import api from '../services/api';
 
 import '../styles/styles.css';
 
-const Login = () => {
+const Register = () => {
 
   const navigate = useNavigate();
+
+  const [nombre, setNombre] =
+    useState('');
 
   const [correo, setCorreo] =
     useState('');
 
+    const [telefono, setTelefono] =
+  useState('');
+
   const [password, setPassword] =
     useState('');
 
-  const login = async () => {
+  const register = async () => {
 
     try {
 
       if (
+        !nombre ||
         !correo ||
         !password
       ) {
@@ -34,29 +41,29 @@ const Login = () => {
 
       const res =
         await api.post(
-          '/auth/login',
-          {
-            correo,
-            password
-          }
+          '/auth/register',
+        {
+        nombre,
+        correo,
+        telefono,
+        password
+        }
         );
 
       localStorage.setItem(
-
         'token',
-
         res.data.token
-
       );
 
       localStorage.setItem(
-
         'usuario',
-
         JSON.stringify(
           res.data.usuario
         )
+      );
 
+      alert(
+        'Cuenta creada correctamente'
       );
 
       navigate('/mis-citas');
@@ -66,7 +73,7 @@ const Login = () => {
       console.error(error);
 
       alert(
-        'Credenciales incorrectas'
+        'Error al registrar'
       );
     }
   };
@@ -80,12 +87,21 @@ const Login = () => {
       <div className="content">
 
         <h2>
-          Login
+          Crear Cuenta
         </h2>
 
         <p className="subtitle">
-          Inicia sesión
+          Registra tu cuenta
         </p>
+
+        <input
+          type="text"
+          placeholder="Nombre completo"
+          value={nombre}
+          onChange={(e) =>
+            setNombre(e.target.value)
+          }
+        />
 
         <input
           type="email"
@@ -96,6 +112,14 @@ const Login = () => {
           }
         />
 
+            <input
+            type="tel"
+            placeholder="Teléfono"
+            value={telefono}
+            onChange={(e) =>
+                setTelefono(e.target.value)
+            }
+            />
         <input
           type="password"
           placeholder="Contraseña"
@@ -105,22 +129,22 @@ const Login = () => {
           }
           onKeyDown={(e) =>
             e.key === 'Enter' &&
-            login()
+            register()
           }
         />
 
         <button
-          onClick={login}
+          onClick={register}
         >
-          Iniciar Sesión
+          Registrarse
         </button>
 
         <button
           onClick={() =>
-            navigate('/register')
+            navigate('/')
           }
         >
-          Crear Cuenta
+          Ya tengo cuenta
         </button>
 
       </div>
@@ -129,4 +153,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
