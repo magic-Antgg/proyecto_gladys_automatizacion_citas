@@ -1,5 +1,5 @@
 const citasService = require('../services/citas.service');
-const supabase = require('../config/supabase');
+const supabase     = require('../config/supabase');
 const { citaSchema } = require('../validations/citas.validation');
 
 /*
@@ -18,12 +18,35 @@ const obtenerAgenda = async (req, res) => {
 
 /*
 |--------------------------------------------------------------------------
+| Obtener mis citas por usuario_id
+|--------------------------------------------------------------------------
+*/
+const obtenerMisCitas = async (req, res) => {
+  try {
+    const { usuario_id } = req.params;
+
+    const { data, error } = await supabase
+      .from('citas')
+      .select('*, pacientes(nombre)')
+      .eq('usuario_id', usuario_id)
+      .eq('activo', true)
+      .order('fecha', { ascending: true });
+
+    if (error) return res.status(400).json({ ok: false, message: error.message });
+
+    res.json({ ok: true, data });
+  } catch (error) {
+    res.status(500).json({ ok: false, message: error.message });
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
 | Crear cita
 |--------------------------------------------------------------------------
 */
 const crearCita = async (req, res) => {
   try {
-    // Validar campos mínimos antes de parsear con Zod
     const { paciente_id, fecha, hora_inicio, servicios } = req.body;
 
     if (!paciente_id || !fecha || !hora_inicio) {
@@ -40,7 +63,6 @@ const crearCita = async (req, res) => {
       });
     }
 
-    // Validar que la fecha no sea en el pasado
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     const fechaCita = new Date(fecha);
@@ -55,7 +77,6 @@ const crearCita = async (req, res) => {
     const nuevaCita = await citasService.crearCita(datosValidados);
 
     res.status(201).json({ ok: true, data: nuevaCita });
-
   } catch (error) {
     res.status(400).json({ ok: false, message: error.message });
   }
@@ -97,11 +118,9 @@ const reprogramarCita = async (req, res) => {
       });
     }
 
-    // Validar que la nueva fecha no sea en el pasado
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
-    const fechaCita = new Date(fecha);
-    if (fechaCita < hoy) {
+    if (new Date(fecha) < hoy) {
       return res.status(400).json({
         ok: false,
         message: 'No puedes reprogramar a una fecha pasada'
@@ -119,83 +138,37 @@ const reprogramarCita = async (req, res) => {
   }
 };
 
-const obtenerMisCitas = async (
-  req,
-  res
-) => {
-
+/*
+|--------------------------------------------------------------------------
+| Eliminar cita del historial — soft delete (activo = false)
+| Solo para citas canceladas desde la vista del paciente
+|--------------------------------------------------------------------------
+*/
+const eliminarCita = async (req, res) => {
   try {
+    const { id } = req.params;
 
-    const {
-      usuario_id
-    } = req.params;
-
-    const {
-      data,
-      error
-    } = await supabase
+    const { error } = await supabase
       .from('citas')
-      .select(`
-        *,
-        pacientes(nombre)
-      `)
-      .eq(
-        'usuario_id',
-        usuario_id
-      )
-      .order(
-        'fecha',
-        {
-          ascending: true
-        }
-      );
+      .update({ activo: false })
+      .eq('id', id);
 
-    if (error) {
+    if (error) throw error;
 
-      return res.status(400).json({
-
-        ok: false,
-
-        message:
-          error.message
-
-      });
-
-    }
-
-    res.json({
-
+    res.status(200).json({
       ok: true,
-
-      data
-
+      message: 'Cita eliminada del historial'
     });
-
   } catch (error) {
-
-    res.status(500).json({
-
-      ok: false,
-
-      message:
-        error.message
-
-    });
-
+    res.status(500).json({ ok: false, message: error.message });
   }
-
 };
 
 module.exports = {
-
   crearCita,
-
   obtenerAgenda,
-
+  obtenerMisCitas,
   cancelarCita,
-
   reprogramarCita,
-
-  obtenerMisCitas
-
+  eliminarCita
 };

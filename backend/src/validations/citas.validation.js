@@ -1,14 +1,11 @@
 const { z } = require('zod');
 
-/*
-|--------------------------------------------------------------------------
-| Validación de citas
-|--------------------------------------------------------------------------
-*/
-
 const citaSchema = z.object({
 
   paciente_id: z.number(),
+
+  // FIX: usuario_id agregado como opcional
+  usuario_id: z.string().optional().nullable(),
 
   fecha: z.string(),
 
@@ -18,12 +15,8 @@ const citaSchema = z.object({
     .array(z.number())
     .min(1, 'Debe agregar al menos un servicio'),
 
-  observaciones: z
-    .string()
-    .optional()
+  observaciones: z.string().optional()
 
 });
 
-module.exports = {
-  citaSchema
-};
+module.exports = { citaSchema };
