@@ -8,7 +8,7 @@ function TablaPacientes() {
   const [guardando, setGuardando] = useState(false);
 
   const [nuevoPaciente, setNuevoPaciente] = useState({
-    nombre: '', telefono: '', correo: '', fecha_nacimiento: ''
+    nombre: '', telefono: '', correo: '', password: ''
   });
 
   const [modalEditar, setModalEditar] = useState(false);
@@ -36,8 +36,25 @@ function TablaPacientes() {
     }
     setGuardando(true);
     try {
-      await api.post('/pacientes', nuevoPaciente);
-      setNuevoPaciente({ nombre: '', telefono: '', correo: '', fecha_nacimiento: '' });
+      // Crear paciente en tabla pacientes
+      await api.post('/pacientes', {
+        nombre:           nuevoPaciente.nombre,
+        telefono:         nuevoPaciente.telefono,
+        correo:           nuevoPaciente.correo,
+        fecha_nacimiento: '2000-01-01'
+      });
+
+      // Si tiene contraseña, también crear usuario en tabla usuarios
+      if (nuevoPaciente.password) {
+        await api.post('/auth/register', {
+          nombre:   nuevoPaciente.nombre,
+          telefono: nuevoPaciente.telefono,
+          correo:   nuevoPaciente.correo,
+          password: nuevoPaciente.password
+        });
+      }
+
+      setNuevoPaciente({ nombre: '', telefono: '', correo: '', password: '' });
       await obtenerPacientes();
     } catch (error) {
       alert(error.response?.data?.message || 'Error al crear paciente');
@@ -69,7 +86,6 @@ function TablaPacientes() {
     }
   };
 
-  // Soft delete — no borra físicamente, solo desactiva
   const eliminarPaciente = async (id) => {
     if (!window.confirm('¿Desactivar este paciente? Sus citas se conservarán.')) return;
     try {
@@ -87,6 +103,7 @@ function TablaPacientes() {
       {/* Formulario nuevo paciente */}
       <div className="admin-card" style={{ marginBottom: '25px' }}>
         <h3 style={{ marginBottom: '15px' }}>Nuevo Paciente</h3>
+
         <input className="login-input" type="text" placeholder="Nombre"
           value={nuevoPaciente.nombre}
           onChange={(e) => setNuevoPaciente({ ...nuevoPaciente, nombre: e.target.value })} />
@@ -99,9 +116,10 @@ function TablaPacientes() {
           value={nuevoPaciente.correo}
           onChange={(e) => setNuevoPaciente({ ...nuevoPaciente, correo: e.target.value })} />
         <br /><br />
-        <input className="login-input" type="date"
-          value={nuevoPaciente.fecha_nacimiento}
-          onChange={(e) => setNuevoPaciente({ ...nuevoPaciente, fecha_nacimiento: e.target.value })} />
+        <input className="login-input" type="password" placeholder="Contraseña (opcional — para acceso al sistema)"
+          value={nuevoPaciente.password}
+          onChange={(e) => setNuevoPaciente({ ...nuevoPaciente, password: e.target.value })} />
+
         <button className="login-btn" style={{ marginTop: '15px' }}
           onClick={crearPaciente} disabled={guardando}>
           {guardando ? 'Guardando...' : 'Crear Paciente'}
