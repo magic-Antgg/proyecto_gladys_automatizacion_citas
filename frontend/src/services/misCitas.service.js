@@ -1,7 +1,7 @@
 import api from './api';
 
 export const obtenerMisCitas = async (usuarioId) => {
-  const res = await api.get(`/citas/usuario/${usuarioId}`);
+  const res = await api.get(`/citas/mis-citas/${usuarioId}`);
   return res.data;
 };
 

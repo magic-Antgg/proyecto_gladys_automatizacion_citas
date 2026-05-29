@@ -27,12 +27,13 @@ const verificarConflictoHorario = async (fecha, horaInicio, horaFin) => {
     .eq('fecha', fecha)
     .neq('estado', 'cancelada');
   if (error) throw error;
-  return data.some((cita) => horaInicio < cita.hora_fin && horaFin > cita.hora_inicio);
+  return data.some((c) => horaInicio < c.hora_fin && horaFin > c.hora_inicio);
 };
 
 /*
 |--------------------------------------------------------------------------
-| Obtener agenda completa
+| Obtener agenda completa — usa vista agenda_detallada
+| que tiene paciente_nombre y servicio_nombre
 |--------------------------------------------------------------------------
 */
 const obtenerAgenda = async () => {
@@ -46,7 +47,7 @@ const obtenerAgenda = async () => {
 
 /*
 |--------------------------------------------------------------------------
-| Crear cita — FIX: ahora guarda usuario_id
+| Crear cita — incluye usuario_id
 |--------------------------------------------------------------------------
 */
 const crearCita = async (cita) => {
@@ -60,21 +61,17 @@ const crearCita = async (cita) => {
   const existeConflicto = await verificarConflictoHorario(
     cita.fecha, cita.hora_inicio, horaFin
   );
+  if (existeConflicto) throw new Error('Ya existe una cita en ese horario');
 
-  if (existeConflicto) {
-    throw new Error('Ya existe una cita en ese horario');
-  }
-
-  // FIX: se agregó usuario_id al INSERT
   const { data: citaCreada, error: errorCita } = await supabase
     .from('citas')
     .insert([{
-      paciente_id:  cita.paciente_id,
-      usuario_id:   cita.usuario_id || null,   // ← CLAVE
-      fecha:        cita.fecha,
-      hora_inicio:  cita.hora_inicio,
-      hora_fin:     horaFin,
-      estado:       'pendiente',
+      paciente_id:   cita.paciente_id,
+      usuario_id:    cita.usuario_id || null,
+      fecha:         cita.fecha,
+      hora_inicio:   cita.hora_inicio,
+      hora_fin:      horaFin,
+      estado:        'pendiente',
       observaciones: cita.observaciones || null
     }])
     .select()
@@ -82,7 +79,6 @@ const crearCita = async (cita) => {
 
   if (errorCita) throw errorCita;
 
-  // Guardar servicios de la cita
   const serviciosRelacionados = cita.servicios.map((servicioId) => ({
     cita_id:     citaCreada.id,
     servicio_id: servicioId

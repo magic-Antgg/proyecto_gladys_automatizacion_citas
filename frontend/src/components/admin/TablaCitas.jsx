@@ -5,6 +5,7 @@ function TablaCitas() {
 
   const [citas, setCitas]           = useState([]);
   const [cargando, setCargando]     = useState(true);
+  const [mostrarCanceladas, setMostrarCanceladas] = useState(false);
   const [modal, setModal]           = useState(false);
   const [citaSel, setCitaSel]       = useState(null);
   const [nuevaFecha, setNuevaFecha] = useState('');
@@ -47,8 +48,7 @@ function TablaCitas() {
     setGuardando(true);
     try {
       await api.patch(`/citas/${citaSel.id}/reprogramar`, {
-        fecha: nuevaFecha,
-        hora_inicio: nuevaHora
+        fecha: nuevaFecha, hora_inicio: nuevaHora
       });
       setModal(false);
       await cargarCitas();
@@ -79,14 +79,32 @@ function TablaCitas() {
     );
   };
 
+  // Filtrar citas según el toggle
+  const citasFiltradas = mostrarCanceladas
+    ? citas
+    : citas.filter((c) => c.estado !== 'cancelada');
+
   if (cargando) return <p style={{ color: '#a0aec0', padding: '20px' }}>Cargando citas...</p>;
 
   return (
     <>
       <h2 className="section-title">📅 Citas</h2>
 
-      {citas.length === 0
-        ? <p style={{ color: '#c7d5e0' }}>No hay citas registradas.</p>
+      {/* Toggle mostrar canceladas */}
+      <div style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <label style={{ color: '#c7d5e0', fontSize: '14px', cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={mostrarCanceladas}
+            onChange={(e) => setMostrarCanceladas(e.target.checked)}
+            style={{ marginRight: '6px' }}
+          />
+          Mostrar citas canceladas ({citas.filter(c => c.estado === 'cancelada').length})
+        </label>
+      </div>
+
+      {citasFiltradas.length === 0
+        ? <p style={{ color: '#c7d5e0' }}>No hay citas activas registradas.</p>
         : (
           <div style={{ overflowX: 'auto' }}>
             <table className="tabla">
@@ -101,7 +119,7 @@ function TablaCitas() {
                 </tr>
               </thead>
               <tbody>
-                {citas.map((cita) => (
+                {citasFiltradas.map((cita) => (
                   <tr key={cita.id}>
                     <td>{cita.paciente_nombre || '—'}</td>
                     <td>{cita.fecha}</td>
@@ -131,28 +149,22 @@ function TablaCitas() {
       {/* Modal reprogramar */}
       {modal && (
         <div style={{
-          position: 'fixed', inset: 0,
-          background: 'rgba(0,0,0,0.6)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 1000
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
         }} onClick={() => setModal(false)}>
           <div style={{
-            background: '#173F5F', borderRadius: '16px',
-            padding: '30px', width: '100%', maxWidth: '400px',
-            display: 'flex', flexDirection: 'column', gap: '16px'
+            background: '#173F5F', borderRadius: '16px', padding: '30px',
+            width: '100%', maxWidth: '400px', display: 'flex', flexDirection: 'column', gap: '16px'
           }} onClick={(e) => e.stopPropagation()}>
 
             <h3 style={{ color: 'white', margin: 0 }}>Reprogramar cita</h3>
-            <p style={{ color: '#c7d5e0', margin: 0 }}>
-              {citaSel?.paciente_nombre}
-            </p>
+            <p style={{ color: '#c7d5e0', margin: 0 }}>{citaSel?.paciente_nombre}</p>
 
             <div>
               <label style={{ color: '#c7d5e0', display: 'block', marginBottom: '6px' }}>Nueva fecha</label>
               <input className="login-input" type="date"
                 value={nuevaFecha} onChange={(e) => setNuevaFecha(e.target.value)} />
             </div>
-
             <div>
               <label style={{ color: '#c7d5e0', display: 'block', marginBottom: '6px' }}>Nueva hora</label>
               <input className="login-input" type="time"
