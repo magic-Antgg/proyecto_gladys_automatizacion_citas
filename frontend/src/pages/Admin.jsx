@@ -8,111 +8,229 @@ import ServiciosAdmin from '../components/admin/ServiciosAdmin';
 import GestionUsuarios from '../components/admin/GestionUsuarios';
 import '../styles/admin.css';
 
-const USUARIO_ADMIN  = 'Carolina';
-const PASSWORD_ADMIN = 'Dental2026$';
-
 function Admin() {
 
-  const [vista, setVista]               = useState('dashboard');
-  const [autenticado, setAutenticado]   = useState(false);
+  const [vista, setVista] = useState('dashboard');
   const [usuarioAdmin, setUsuarioAdmin] = useState(null);
-  const [inputUsuario, setInputUsuario]   = useState('');
-  const [inputPassword, setInputPassword] = useState('');
-  const [error, setError]                 = useState('');
-  const [mensajeSesion, setMensajeSesion] = useState('');
 
   useEffect(() => {
-    const u = localStorage.getItem('usuario');
-    if (u) {
-      const parsed = JSON.parse(u);
-      if (['admin', 'dentista', 'recepcionista'].includes(parsed.rol)) {
-        setUsuarioAdmin(parsed);
-        setInputUsuario(USUARIO_ADMIN);
-        setInputPassword(PASSWORD_ADMIN);
-        setMensajeSesion(`✅ Sesión activa — Bienvenido, ${parsed.nombre}`);
-      }
+
+    const u =
+      localStorage.getItem(
+        'usuario'
+      );
+
+    if (!u) {
+
+      window.location.href = '/';
+
+      return;
+
     }
+
+    const parsed =
+      JSON.parse(u);
+
+    if (
+      ![
+        'admin',
+        'dentista',
+        'recepcionista'
+      ].includes(parsed.rol)
+    ) {
+
+      window.location.href = '/';
+
+      return;
+
+    }
+
+    setUsuarioAdmin(parsed);
+
   }, []);
 
-  const handleLogin = () => {
-    if (inputUsuario === USUARIO_ADMIN && inputPassword === PASSWORD_ADMIN) {
-      setAutenticado(true);
-      setError('');
-    } else {
-      setError('Usuario o contraseña incorrectos');
-    }
-  };
-
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    setAutenticado(false);
-    setUsuarioAdmin(null);
-    setInputUsuario('');
-    setInputPassword('');
-    setMensajeSesion('');
-    setVista('dashboard');
+
+    localStorage.removeItem(
+      'token'
+    );
+
+    localStorage.removeItem(
+      'usuario'
+    );
+
+    window.location.href = '/';
+
   };
 
-  if (!autenticado) {
+  if (!usuarioAdmin) {
+
     return (
-      <div className="admin-login">
-        <div className="login-box">
-          <h2>🦷 DentalSystem</h2>
-          <p>Panel Administrador</p>
-
-          {mensajeSesion && (
-            <div style={{
-              background: '#d8f0ea', borderRadius: '10px',
-              padding: '10px 14px', color: '#102A43',
-              fontSize: '13px', fontWeight: '500', marginBottom: '4px'
-            }}>
-              {mensajeSesion}
-            </div>
-          )}
-
-          <input type="text" placeholder="Usuario"
-            value={inputUsuario}
-            onChange={(e) => setInputUsuario(e.target.value)}
-            className="login-input" />
-
-          <input type="password" placeholder="Contraseña"
-            value={inputPassword}
-            onChange={(e) => setInputPassword(e.target.value)}
-            className="login-input"
-            onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
-
-          {error && <p className="login-error">{error}</p>}
-
-          <button className="login-btn" onClick={handleLogin}>Entrar</button>
-
-          {usuarioAdmin && (
-            <button className="login-btn"
-              style={{ background: '#e74c3c', marginTop: '8px' }}
-              onClick={handleLogout}>
-              Cerrar sesión
-            </button>
-          )}
+      <div className="admin-container">
+        <div className="admin-content">
+          <h2>Cargando...</h2>
         </div>
       </div>
     );
+
   }
 
-  const rol = usuarioAdmin?.rol || 'admin';
+  const rol =
+    usuarioAdmin?.rol || 'admin';
 
   return (
+
     <div className="admin-container">
-      <AdminNavbar vista={vista} setVista={setVista} onLogout={handleLogout} rol={rol} />
+
+      <AdminNavbar
+        vista={vista}
+        setVista={setVista}
+        onLogout={handleLogout}
+        rol={rol}
+      />
+
       <div className="admin-content">
-        {vista === 'dashboard' && <DashboardCards />}
-        {vista === 'citas'     && (rol === 'admin' || rol === 'recepcionista') && <TablaCitas />}
-        {vista === 'pacientes' && (rol === 'admin' || rol === 'recepcionista') && <TablaPacientes />}
-        {vista === 'servicios' && rol === 'admin' && <ServiciosAdmin />}
-        {vista === 'agenda'    && <AgendaVisual />}
-        {vista === 'usuarios'  && rol === 'admin' && <GestionUsuarios />}
+
+        <div
+          style={{
+            background: '#173f67',
+            border: '1px solid rgba(255,255,255,0.08)',
+            padding: '14px 18px',
+            borderRadius: '14px',
+            marginBottom: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px'
+          }}
+        >
+
+          <div
+            style={{
+              width: '55px',
+              height: '55px',
+              borderRadius: '50%',
+              background: '#36a2c9',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+              fontSize: '22px',
+              fontWeight: 'bold'
+            }}
+          >
+            {usuarioAdmin.nombre?.charAt(0).toUpperCase()}
+          </div>
+
+          <div>
+
+            <h2
+              style={{
+                margin: 0,
+                color: '#ffffff',
+                fontSize: '32px'
+              }}
+            >
+              Bienvenido, {usuarioAdmin.nombre}
+            </h2>
+
+            <p
+              style={{
+                margin: '4px 0',
+                color: '#d6e4f0'
+              }}
+            >
+              📧 {usuarioAdmin.correo}
+            </p>
+
+            <p
+              style={{
+                margin: '4px 0',
+                color: '#d6e4f0'
+              }}
+            >
+              🛡️ Rol:
+              <strong
+                style={{
+                  marginLeft: '8px',
+                  color:
+                    rol === 'admin'
+                      ? '#ff6b6b'
+                      : rol === 'dentista'
+                      ? '#4fc3f7'
+                      : '#68d391'
+                }}
+              >
+                {rol.toUpperCase()}
+              </strong>
+            </p>
+
+            <p
+              style={{
+                margin: '4px 0',
+                color: '#9fb3c8',
+                fontSize: '13px'
+              }}
+            >
+              📅 {new Date().toLocaleDateString(
+                'es-MX',
+                {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                }
+              )}
+            </p>
+
+          </div>
+
+        </div>
+
+        {vista === 'dashboard' &&
+          <DashboardCards />
+        }
+
+        {vista === 'citas' &&
+          (
+            rol === 'admin' ||
+            rol === 'dentista' ||
+            rol === 'recepcionista'
+          ) &&
+          <TablaCitas />
+        }
+
+        {vista === 'pacientes' &&
+          (
+            rol === 'admin' ||
+            rol === 'dentista' ||
+            rol === 'recepcionista'
+          ) &&
+          <TablaPacientes />
+        }
+
+        {vista === 'servicios' &&
+          (
+            rol === 'admin' ||
+            rol === 'dentista'
+          ) &&
+          <ServiciosAdmin />
+        }
+
+        {vista === 'agenda' &&
+          <AgendaVisual />
+        }
+
+        {vista === 'usuarios' &&
+          rol === 'admin' &&
+          <GestionUsuarios />
+        }
+
       </div>
+
     </div>
+
   );
+
 }
 
 export default Admin;

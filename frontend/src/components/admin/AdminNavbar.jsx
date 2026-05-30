@@ -1,13 +1,72 @@
 function AdminNavbar({ vista, setVista, onLogout, rol }) {
 
-  const opciones = [
-    { id: 'dashboard',  label: 'Dashboard',  icono: '📊', roles: ['admin', 'dentista', 'recepcionista'] },
-    { id: 'citas',      label: 'Citas',      icono: '📅', roles: ['admin', 'recepcionista'] },
-    { id: 'pacientes',  label: 'Pacientes',  icono: '👥', roles: ['admin', 'recepcionista'] },
-    { id: 'servicios',  label: 'Servicios',  icono: '🦷', roles: ['admin'] },
-    { id: 'agenda',     label: 'Agenda',     icono: '🗓️', roles: ['admin', 'dentista', 'recepcionista'] },
-    { id: 'usuarios',   label: 'Usuarios',   icono: '👤', roles: ['admin'] },
-  ];
+  
+const opciones = [
+
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    icono: '📊',
+    roles: [
+      'admin',
+      'dentista',
+      'recepcionista'
+    ]
+  },
+
+  {
+    id: 'citas',
+    label: 'Citas',
+    icono: '📅',
+    roles: [
+      'admin',
+      'dentista',
+      'recepcionista'
+    ]
+  },
+
+  {
+    id: 'pacientes',
+    label: 'Pacientes',
+    icono: '👥',
+    roles: [
+      'admin',
+      'dentista',
+      'recepcionista'
+    ]
+  },
+
+  {
+    id: 'servicios',
+    label: 'Servicios',
+    icono: '🦷',
+    roles: [
+      'admin',
+      'dentista'
+    ]
+  },
+
+  {
+    id: 'agenda',
+    label: 'Agenda',
+    icono: '🗓️',
+    roles: [
+      'admin',
+      'dentista',
+      'recepcionista'
+    ]
+  },
+
+  {
+    id: 'usuarios',
+    label: 'Usuarios',
+    icono: '👤',
+    roles: [
+      'admin'
+    ]
+  }
+
+];
 
   const opcionesFiltradas = opciones.filter(
     (op) => !rol || op.roles.includes(rol)

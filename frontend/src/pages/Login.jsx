@@ -59,11 +59,26 @@ const Login = () => {
 
       );
 
-  if (res.data.usuario?.rol === 'admin') {
-    navigate('/admin');
-  } else {
-    navigate('/mis-citas');
-  }
+const rol =
+  res.data.usuario?.rol;
+
+if (
+
+  rol === 'admin' ||
+
+  rol === 'recepcionista' ||
+
+  rol === 'dentista'
+
+) {
+
+  navigate('/admin');
+
+} else {
+
+  navigate('/mis-citas');
+
+}
 
     } catch (error) {
 
